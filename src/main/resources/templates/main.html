@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+</head>
+<body>
+    <!--${...}는 Thymeleaf의 표현식 문법입니다. 이를 사용하여 변수, 속성 또는 메서드의 값을 템플릿에 출력하거나 조건부로 HTML 요소를 렌더링할 수 있습니다. -->
+    session 값 확인: <p th:text="${session.loginEmail}"></p> <!--session에 담겨있는 loginEmail(controller에서 정의되어있음) 파라미터값을 사용한다는거임 -->
+</body>
+</html>
