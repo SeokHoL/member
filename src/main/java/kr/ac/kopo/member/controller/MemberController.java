@@ -7,10 +7,7 @@ import kr.ac.kopo.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -61,6 +58,55 @@ public class MemberController {
         model.addAttribute("memberList",memberDTOList);  // "키 : 값" 이라고 이해하면됨
         return "list";
     }
+
+    @GetMapping("/member/{id}")
+    public String findById(@PathVariable Long id, Model model){ // {id} 이거를 담아온다
+
+       MemberDTO memberDTO =memberService.findById(id);
+       model.addAttribute("member",memberDTO);
+       return "detail";
+    }
+
+    @GetMapping("/member/update")
+    public String updateForm(HttpSession session, Model model){
+       String myEmail =(String)session.getAttribute("loginEmail");
+       MemberDTO memberDTO =memberService.updateForm(myEmail);
+       model.addAttribute("updateMember",memberDTO);
+       return "update";
+    }
+
+    @PostMapping("/member/update")
+    public String update(@ModelAttribute MemberDTO memberDTO){
+        memberService.update(memberDTO);
+        return "redirect:/member/" + memberDTO.getId();
+    }
+
+
+    @GetMapping("/member/delete/{id}") // 여기서  "/member/delete/{id}" 띄어쓰기 해도 오류남 ->ex) "/member/delete/{id} " 머 이런식
+    public String deleteById(@PathVariable Long id){
+        memberService.deleteById(id);
+        return "redirect:/member/";
+    }
+
+    @GetMapping("/member/logout")
+    public String logout(HttpSession session){
+        session.invalidate(); // invalidate는 세션을 무효화한다\
+        return "index";
+    }
+
+    @PostMapping("/member/email-check")
+    public @ResponseBody String emailCheck(@RequestParam("memberEmail")String memberEmail){
+        System.out.println("memberEmail= " + memberEmail );
+        String checkResult = memberService.emailCheck(memberEmail);
+        return checkResult;
+//        if(checkResult !=null){
+//            return "ok";
+//        }else{
+//            return "no";
+//        }
+
+    }
+
 
 
 }
